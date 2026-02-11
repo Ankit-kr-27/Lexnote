@@ -1,13 +1,31 @@
 import React, { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import logo from "../assets/logo.png"
+import axios from 'axios'
+import { serverUrl } from '../App'
+import { useNavigate } from 'react-router-dom'
+import { setUserData } from '../redux/userSlice'
 
 const Navbar = () => {
   const { userData } = useSelector((state) => state.user)
   const credits = userData?.user?.credits ?? 0
   const [showCredits, setShowCredits] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const handleSignOut = async () => {
+    try {
+      await axios.post(serverUrl + "/api/auth/logout", {
+        withCredentials: true
+      })
+      dispatch(setUserData(null))
+      navigate("/auth")
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <motion.div
@@ -26,7 +44,7 @@ const Navbar = () => {
       <div className="flex items-center gap-3 relative">
         <img src={logo} alt="Lexnote" className="w-9 h-9" />
         <span className="text-lg hidden md:block font-semibold text-white tracking-wide">
-          Lex <span className="text-gray-400">Note</span>
+          Lex<span className="text-gray-400">Note</span>
         </span>
       </div>
 
@@ -82,7 +100,7 @@ const Navbar = () => {
                 Use credits to generate AI notes, charts, graphs and PDFs
               </p>
               <button
-                onClick={() => setShowCredits(false)}
+                onClick={() => {setShowCredits(false); navigate("/pricing")}}
                 className="
                   w-full py-2 rounded-lg
                   bg-gradient-to-br from-white to-gray-200
@@ -132,8 +150,8 @@ const Navbar = () => {
               "
             >
                 <MenuItem text="History" onClick={() => {setShowProfile(false)}}/>
-                <div className='h-px bg-white/10 mx-3'></div>
-                <MenuItem text="sign out" red onClick={() => {setShowProfile(false)}}/>
+                <div className='h-px bg-white/10 mx-3 '></div>
+                <MenuItem text="sign out" red onClick={() => { handleSignOut()}}/>
                 
               
             </motion.div>
@@ -151,7 +169,7 @@ const Navbar = () => {
 function MenuItem ({onClick, text, red}){
   return (
     <div onClick={onClick}
-    className={`w-full text-left px-5 py-3 text-sm transition-colors rounded-lg ${red ? "text-red-400 hover:bg-red-500/10" : "text-gray-200 hover:bg-white/10"}`}>
+    className={`w-full text-left px-5 py-3 text-sm transition-colors rounded-lg ${red ? "text-red-400 hover:bg-red-500/10 cursor-pointer" : "text-gray-200 hover:bg-white/10 cursor-pointer"}`}>
         {text}
 
     </div>
