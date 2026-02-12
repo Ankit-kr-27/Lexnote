@@ -1,8 +1,67 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { motion } from 'motion/react'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import TopicForm from '../components/TopicForm'
 
 const Notes = () => {
+  const { userData } = useSelector((state) => state.user)
+  const credits = userData?.user?.credits ?? 0
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+  const [result, setResult] = useState(null)
+  const navigate = useNavigate()
   return (
-    <div>Notes</div>
+    <div className='min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 px-6 py-8'>
+      <motion.header
+        initial={{ opacity: 0, y: -15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className='mb-10 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/10 px-8 py-6 shadow-[0_20px_45px_rgba(0,0,0,0.6)] items-start flex md:items-center justify-between gap-4 flex-col md:flex-row'>
+        <div className='cursor-pointer' onClick={() => navigate("/")}>
+          <h1 className='text-2xl font-bold bg-linear-to-r from-white via-gray-300 to-white bg-clip-text text-transparent'>LexNote</h1>
+          <p className='text-sm text-gray-300 mt-1'>Your AI-powered exam-oriented notes & revision platform</p>
+        </div>
+
+        <div className='flex items-center gap-4 flex-wrap'>
+          <button className='flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white text-sm cursor-pointer' onClick={() => navigate("/pricing")}>
+            <span className="text-lg">💎</span>
+            <span className="text-sm font-semibold tabular-nums">
+              {credits}
+            </span>
+            <motion.span whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }}
+              className="
+              ml-1 h-6 w-6 flex items-center justify-center
+              rounded-full bg-white text-black text-xs font-bold
+              shadow-sm
+            "
+            >
+              ➕
+            </motion.span>
+
+          </button>
+
+          <button onClick={() => navigate("/history")} className='px-4 py-3 rounded-full text-m font-medium bg-white/10 border border-white/20 text-white hover:bg-whiite/20 transition flex items-center gap-2 cursor-pointer'>
+          📚Your Notes
+          </button>
+        </div>
+
+      </motion.header>
+
+      <motion.div
+      className='mb-12'>
+        <TopicForm loading={loading} setLoading={setLoading} setError={setError}  setResult={setResult}/>
+      </motion.div>
+
+      {!result && <motion.div whileHover={{ scale: 1.02}}
+      className='h-64 rounded-2xl flex flex-col items-center justify-center bg-white/60 backdrop-blur-lg border border-dashed border-gray-300 text-gray-500 shadow-inner'
+      >
+        <span className='text-4xl mb-3'>📘</span>
+        <p className='text-sm'> Generated Notes will appear here</p>
+
+      </motion.div>}
+
+    </div>
   )
 }
 
