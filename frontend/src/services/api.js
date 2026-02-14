@@ -18,10 +18,31 @@ export const generateNotes = async (payload) => {
       payload,
       { withCredentials: true }
     );
-    return result; // ✅ return full axios response
+    return result; 
   } catch (error) {
     console.error(error);
-    throw error; // ✅ IMPORTANT
+    throw error; 
   }
 };
 
+export const downloadPdf = async (result) => {
+  const response = await axios.post(
+    serverUrl + "/api/pdf/generate-pdf",
+    result,
+    {
+      responseType: "blob",
+      withCredentials: true
+    }
+  );
+
+  const blob = new Blob([response.data], {
+    type: "application/pdf"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "Lexnote.pdf";
+  link.click();
+  URL.revokeObjectURL(url);
+};
