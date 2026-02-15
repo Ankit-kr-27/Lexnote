@@ -1,6 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { serverUrl } from "../App";
+import axios from 'axios'
 
 const History = () => {
+  const [topics, setTopics] = useState([])
+  useEffect(() => {
+    const myNotes = async () => {
+      try {
+        const res = await axios.get(serverUrl + "/api/notes/getnotes", { withCredentials: true })
+        console.log(res.data)
+        setTopics(Array.isArray(res.data) ? res.data : [])
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    myNotes()
+  }, [])
+
   return (
     <div>History</div>
   )
