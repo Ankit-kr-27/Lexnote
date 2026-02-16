@@ -149,7 +149,7 @@ const Navbar = () => {
                 p-4 text-white
               "
               >
-                <MenuItem text="History" onClick={() => { setShowProfile(false) }} />
+                <MenuItem text="History" onClick={() => { setShowProfile(false); navigate("/history") }} />
                 <div className='h-px bg-white/10 mx-3 '></div>
                 <MenuItem text="sign out" red onClick={() => { handleSignOut() }} />
 
