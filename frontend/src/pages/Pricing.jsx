@@ -2,6 +2,8 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import {motion} from 'framer-motion'
 import { useState } from 'react'
+import axios from 'axios';
+import { serverUrl } from '../App';
 
 const Pricing = () => {
   const navigate = useNavigate();
@@ -13,7 +15,17 @@ const Pricing = () => {
     try {
       setPayingAmount(amount);
       setPaying(true)
+      const result = await axios.post(serverUrl + "/api/credit/order", {amount}, {
+        withCredentials: true
+      })
+
+      if(result.data.url){
+        window.location.href = result.data.url;
+      }
     } catch (error) {
+      console.log(error);
+    } finally {
+      setPaying(false);
       
     }
   }
