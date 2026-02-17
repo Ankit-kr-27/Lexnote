@@ -4,7 +4,7 @@ import Home from './pages/Home'
 import Auth from './pages/Auth'
 import { getCurrentUser } from './services/api'
 import { useDispatch, useSelector } from 'react-redux'
-export const serverUrl = "http://localhost:8000"
+export const serverUrl = "https://lexnotebackend.onrender.com"
 import Notes from './pages/Notes'
 import History from './pages/History'
 import Pricing from './pages/Pricing'
